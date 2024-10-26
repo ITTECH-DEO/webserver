@@ -1,0 +1,56 @@
+<?php
+// Example data to send
+$data = [
+    "data" => [
+        "no_kegiatan" => "001/SALDOAWAL/2024",
+        "tgl_kegiatan" => "01-02-2024",
+        "npwp" => "027681030529000",
+        "nib" => "9120100781919",
+        "barangSaldo" => [
+            [
+                "kd_kategori_barang" => "1",
+                "kd_barang" => "barang1",
+                "uraian_barang" => "Uraian barang 1",
+                "jumlah" => 100000,
+                "satuan" => "KGM",
+                "nilai" => 100000,
+                "tanggal_declare" => "05-06-2023"
+            ],
+            // More items here...
+        ]
+    ]
+];
+
+// Encode the PHP array into JSON
+$json_data = json_encode($data);
+
+// Initialize cURL
+$ch = curl_init();
+
+// Set cURL options
+curl_setopt($ch, CURLOPT_URL, "https://api.insw.go.id/api-prod/inventory/tempInsertSaldoAwal"); // Use your endpoint
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data); // Attach the JSON data
+
+// Set headers to indicate JSON content
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Authorization: Bearer YOUR_ACCESS_TOKEN' // Replace with your API token if needed
+]);
+
+// Execute the request and get the response
+$response = curl_exec($ch);
+
+// Handle response or errors
+if (curl_errno($ch)) {
+    echo 'Error:' . curl_error($ch);
+} else {
+    // Decode and print the response for debugging
+    $decoded_response = json_decode($response, true);
+    print_r($decoded_response);
+}
+
+// Close cURL
+curl_close($ch);
+?>
